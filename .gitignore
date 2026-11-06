@@ -1,0 +1,20 @@
+# secrets: the real key stays local
+.env
+*.env.local
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# frontend
+frontend/node_modules/
+frontend/dist/
+*.tsbuildinfo
+
+# runtime scratch from the audit trail writer
+output/*.lock
+output/*.tmp
+
+# OS
+.DS_Store

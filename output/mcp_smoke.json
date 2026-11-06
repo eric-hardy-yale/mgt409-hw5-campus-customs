@@ -1,0 +1,332 @@
+{
+  "run_at": "2026-11-06T14:56:02+00:00",
+  "how": "MCP client over stdio, server launched from hw5/.mcp.json; each answer checked against direct SQL",
+  "server": {
+    "name": "campus-customs",
+    "command": ".venv/bin/python",
+    "args": [
+      "mcp_server/server.py"
+    ]
+  },
+  "database": "data/campus_customs_new.db",
+  "tools_listed": [
+    "check_stock",
+    "get_price_and_margin",
+    "get_rent_status"
+  ],
+  "calls": [
+    {
+      "ticket": 101,
+      "ticket_asks": "Tauhid Zaman wants 1 CC-TEE-WHITE in S",
+      "tool": "check_stock",
+      "arguments": {
+        "sku": "CC-TEE-WHITE",
+        "size": "S",
+        "qty_needed": 1
+      },
+      "response": {
+        "sku": "CC-TEE-WHITE",
+        "name": "Classic Bulldog Tee",
+        "size": "S",
+        "qty_on_hand": 0,
+        "location": "Aisle B",
+        "qty_needed": 1,
+        "shortfall": 1,
+        "can_fill_from_stock": false
+      },
+      "expected_from_sql": {
+        "qty_on_hand": 0,
+        "location": "Aisle B",
+        "shortfall": 1
+      },
+      "pass": true
+    },
+    {
+      "ticket": 102,
+      "ticket_asks": "Elm City Properties rent notice for lease 1",
+      "tool": "get_rent_status",
+      "arguments": {
+        "lease_id": 1
+      },
+      "response": {
+        "today": "2026-08-31",
+        "lease_id": 1,
+        "space_name": "Chapel Street shop",
+        "landlord": "Elm City Properties",
+        "monthly_rent": 2400.0,
+        "next_due": "2026-09-02",
+        "days_until_due": 2,
+        "overdue": false,
+        "notes": null,
+        "cash_accounts": [
+          {
+            "account": "checking",
+            "balance": 3400.0,
+            "as_of": "2026-08-31",
+            "can_cover_rent": true,
+            "balance_after_rent": 1000.0
+          }
+        ]
+      },
+      "expected_from_sql": {
+        "monthly_rent": 2400.0,
+        "next_due": "2026-09-02",
+        "today": "2026-08-31",
+        "days_until_due": 2,
+        "checking_balance": 3400.0,
+        "balance_after_rent": 1000.0
+      },
+      "pass": true
+    },
+    {
+      "ticket": 103,
+      "ticket_asks": "Yale AI Club wants 20 CC-HOOD-NAVY in M",
+      "tool": "check_stock",
+      "arguments": {
+        "sku": "CC-HOOD-NAVY",
+        "size": "M",
+        "qty_needed": 20
+      },
+      "response": {
+        "sku": "CC-HOOD-NAVY",
+        "name": "Basic Hoodie Big Yale",
+        "size": "M",
+        "qty_on_hand": 8,
+        "location": "Aisle A",
+        "qty_needed": 20,
+        "shortfall": 12,
+        "can_fill_from_stock": false
+      },
+      "expected_from_sql": {
+        "qty_on_hand": 8,
+        "location": "Aisle A",
+        "shortfall": 12
+      },
+      "pass": true
+    },
+    {
+      "ticket": 103,
+      "ticket_asks": "Yale AI Club asks for a bulk discount on CC-HOOD-NAVY",
+      "tool": "get_price_and_margin",
+      "arguments": {
+        "sku": "CC-HOOD-NAVY"
+      },
+      "response": {
+        "sku": "CC-HOOD-NAVY",
+        "unit_cost": 22.0,
+        "list_price": 58.0,
+        "margin_per_unit": 36.0,
+        "max_discount_pct_before_loss": 62.1
+      },
+      "expected_from_sql": {
+        "unit_cost": 22.0,
+        "list_price": 58.0,
+        "margin_per_unit": 36.0
+      },
+      "pass": true
+    },
+    {
+      "ticket": null,
+      "ticket_asks": "input not in the database",
+      "tool": "check_stock",
+      "arguments": {
+        "sku": "CC-HOOD-NAVY",
+        "size": "XXL"
+      },
+      "response": "SKU CC-HOOD-NAVY has no size XXL; sizes on file: L, M, S, XL",
+      "expected": "error, no made-up data",
+      "pass": true
+    },
+    {
+      "ticket": null,
+      "ticket_asks": "input not in the database",
+      "tool": "get_rent_status",
+      "arguments": {
+        "lease_id": 99
+      },
+      "response": "Lease 99 is not in the leases table",
+      "expected": "error, no made-up data",
+      "pass": true
+    },
+    {
+      "ticket": null,
+      "ticket_asks": "input not in the database",
+      "tool": "get_price_and_margin",
+      "arguments": {
+        "sku": "CC-SOCKS-RED"
+      },
+      "response": "SKU CC-SOCKS-RED is not in the pricing table",
+      "expected": "error, no made-up data",
+      "pass": true
+    }
+  ],
+  "database_unchanged": true,
+  "all_passed": true,
+  "vibe_coder_calls": {
+    "called_at": "2026-11-06T14:57:00Z",
+    "how": "called directly by the vibe coder (Claude Code) via the campus-customs MCP server",
+    "note": "the MCP tool output shows whole-number amounts as integers (2400) where the script's JSON shows floats (2400.0); same values",
+    "calls": [
+      {
+        "prompt": "Ticket 101: check_stock(sku=\"CC-TEE-WHITE\", size=\"S\", qty_needed=1)",
+        "ticket": 101,
+        "tool": "check_stock",
+        "arguments": {
+          "sku": "CC-TEE-WHITE",
+          "size": "S",
+          "qty_needed": 1
+        },
+        "response": {
+          "sku": "CC-TEE-WHITE",
+          "name": "Classic Bulldog Tee",
+          "size": "S",
+          "qty_on_hand": 0,
+          "location": "Aisle B",
+          "qty_needed": 1,
+          "shortfall": 1,
+          "can_fill_from_stock": false
+        },
+        "matches_script_evidence": true,
+        "db_values": {
+          "query": "SELECT qty, location FROM inventory WHERE sku='CC-TEE-WHITE' AND size='S'",
+          "rows": [
+            [
+              0,
+              "Aisle B"
+            ]
+          ]
+        },
+        "matches_db": true
+      },
+      {
+        "prompt": "Ticket 102: get_rent_status(lease_id=1)",
+        "ticket": 102,
+        "tool": "get_rent_status",
+        "arguments": {
+          "lease_id": 1
+        },
+        "response": {
+          "today": "2026-08-31",
+          "lease_id": 1,
+          "space_name": "Chapel Street shop",
+          "landlord": "Elm City Properties",
+          "monthly_rent": 2400,
+          "next_due": "2026-09-02",
+          "days_until_due": 2,
+          "overdue": false,
+          "notes": null,
+          "cash_accounts": [
+            {
+              "account": "checking",
+              "balance": 3400,
+              "as_of": "2026-08-31",
+              "can_cover_rent": true,
+              "balance_after_rent": 1000
+            }
+          ]
+        },
+        "matches_script_evidence": true,
+        "db_values": {
+          "query": "leases id=1; cash_accounts checking; desk.date_today",
+          "lease_rent_due": [
+            [
+              2400.0,
+              "2026-09-02"
+            ]
+          ],
+          "checking_balance_date": [
+            [
+              3400.0,
+              "2026-08-31"
+            ]
+          ],
+          "date_today": [
+            [
+              "2026-08-31"
+            ]
+          ]
+        },
+        "matches_db": true
+      },
+      {
+        "prompt": "Ticket 103: check_stock(sku=\"CC-HOOD-NAVY\", size=\"M\", qty_needed=20)",
+        "ticket": 103,
+        "tool": "check_stock",
+        "arguments": {
+          "sku": "CC-HOOD-NAVY",
+          "size": "M",
+          "qty_needed": 20
+        },
+        "response": {
+          "sku": "CC-HOOD-NAVY",
+          "name": "Basic Hoodie Big Yale",
+          "size": "M",
+          "qty_on_hand": 8,
+          "location": "Aisle A",
+          "qty_needed": 20,
+          "shortfall": 12,
+          "can_fill_from_stock": false
+        },
+        "matches_script_evidence": true,
+        "db_values": {
+          "query": "SELECT qty, location FROM inventory WHERE sku='CC-HOOD-NAVY' AND size='M'",
+          "rows": [
+            [
+              8,
+              "Aisle A"
+            ]
+          ]
+        },
+        "matches_db": true
+      },
+      {
+        "prompt": "Ticket 103: get_price_and_margin(sku=\"CC-HOOD-NAVY\")",
+        "ticket": 103,
+        "tool": "get_price_and_margin",
+        "arguments": {
+          "sku": "CC-HOOD-NAVY"
+        },
+        "response": {
+          "sku": "CC-HOOD-NAVY",
+          "unit_cost": 22,
+          "list_price": 58,
+          "margin_per_unit": 36,
+          "max_discount_pct_before_loss": 62.1
+        },
+        "matches_script_evidence": true,
+        "db_values": {
+          "query": "SELECT unit_cost, list_price FROM pricing WHERE sku='CC-HOOD-NAVY'",
+          "rows": [
+            [
+              22.0,
+              58.0
+            ]
+          ]
+        },
+        "matches_db": true
+      },
+      {
+        "prompt": "One input that isn't in the database (e.g. check_stock(sku=\"CC-HOOD-NAVY\", size=\"XXL\")) to show it refuses instead of inventing data.",
+        "ticket": null,
+        "tool": "check_stock",
+        "arguments": {
+          "sku": "CC-HOOD-NAVY",
+          "size": "XXL"
+        },
+        "is_error": true,
+        "response": "SKU CC-HOOD-NAVY has no size XXL; sizes on file: L, M, S, XL",
+        "matches_script_evidence": true,
+        "db_values": {
+          "query": "SELECT size FROM inventory WHERE sku='CC-HOOD-NAVY'",
+          "sizes": [
+            "L",
+            "M",
+            "S",
+            "XL"
+          ]
+        },
+        "matches_db": true
+      }
+    ]
+  }
+}
